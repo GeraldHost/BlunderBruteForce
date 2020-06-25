@@ -59,7 +59,7 @@ class Blunder:
         return pool.terminate()
       if 'location' in ret[0].headers and '/admin/dashboard' in ret[0].headers[
           'location']:
-        print('[+] Success: Password is %s' ret[1])
+        print('[+] Success: Password is %s' % ret[1])
         pool.terminate()
 
     for password in self.words:
