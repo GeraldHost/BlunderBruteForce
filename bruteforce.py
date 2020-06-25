@@ -54,7 +54,7 @@ class Blunder:
 def main():
     url = "http://10.10.10.191"
     username = "fergus"
-    blunder = Blunder(url)
+    blunder = Blunder(url, username)
     blunder.run()
 
 if __name__ == "__main__":
