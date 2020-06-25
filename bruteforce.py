@@ -10,7 +10,6 @@ def request_csrf_token(session, url):
         return match.group(1)
 
 class Blunder:
-
     def __init__(self, url, username):
         self.url = url
         self.username = username
@@ -45,7 +44,7 @@ class Blunder:
                     pool.terminate()
                     return password
         for word in self.words:
-            pool.apply_async(attempt_login, args=[word], callback=callback)
+            pool.apply_async(self.attempt_login, args=[word], callback=callback)
 
         pool.close()
         pool.join()
